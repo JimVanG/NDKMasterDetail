@@ -23,10 +23,57 @@ android {
     }
     externalNativeBuild {
         cmake {
+            version '3.10.2'
             path "src/main/cpp/CMakeLists.txt"
         }
     }
+
+    /*
+    Using productFlavors we can specify which ABI to use for each different device CPU type. This
+    will help cut down on unnecessary APK bloat.
+
+    NOTE: If trying to run app on emulator switch the Build Variants to x86 in AS.
+    Build -> Select Build Variants...
+     */
+    flavorDimensions 'cpuArch'
+    productFlavors {
+        arm7 {
+            dimension 'cpuArch'
+            ndk {
+                abiFilter 'armeabi-v7a'
+            }
+        }
+        arm8 {
+            dimension 'cpuArch'
+            ndk {
+                abiFilters 'arm64-v8a'
+            }
+        }
+        x86 {
+            dimension 'cpuArch'
+            ndk {
+                abiFilter 'x86'
+            }
+        }
+        x86_64 {
+            dimension 'cpuArch'
+            ndk {
+                abiFilter 'x86_64'
+            }
+        }
+        universal {
+            dimension 'cpuArch'
+            // include all default ABIs. with NDK-r16,  it is:
+            //   armeabi-v7a, arm64-v8a, x86, x86_64
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
