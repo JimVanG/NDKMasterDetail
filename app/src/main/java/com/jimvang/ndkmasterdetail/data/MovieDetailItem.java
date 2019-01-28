@@ -1,5 +1,6 @@
 package com.jimvang.ndkmasterdetail.data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,8 +11,48 @@ public class MovieDetailItem
 {
     public String name;
     public float score;
-    public List<ActorItem> actorItemList;
+    public List<ActorItem> actorItemList = new ArrayList<>();
     public String description;
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public float getScore()
+    {
+        return score;
+    }
+
+    public void setScore(float score)
+    {
+        this.score = score;
+    }
+
+    public List<ActorItem> getActorItemList()
+    {
+        return actorItemList;
+    }
+
+    public void setActorItemList(List<ActorItem> actorItemList)
+    {
+        this.actorItemList = actorItemList;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
 
     @Override
     public boolean equals(Object o)

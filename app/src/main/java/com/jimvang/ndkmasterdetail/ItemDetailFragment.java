@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.jimvang.ndkmasterdetail.data.Content;
 
+import java.util.Objects;
+
 import androidx.fragment.app.Fragment;
 
 /**
@@ -32,8 +34,7 @@ public class ItemDetailFragment extends Fragment
     private Content.DummyItem mItem;
 
     /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
+     * Required empty Fragment Constructor
      */
     public ItemDetailFragment()
     {
@@ -44,7 +45,7 @@ public class ItemDetailFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID))
+        if (Objects.requireNonNull(getArguments()).containsKey(ARG_ITEM_ID))
         {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader

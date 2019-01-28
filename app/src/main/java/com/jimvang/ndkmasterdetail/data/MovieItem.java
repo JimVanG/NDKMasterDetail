@@ -16,6 +16,26 @@ public class MovieItem
         this.lastUpdated = lastUpdated;
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public int getLastUpdated()
+    {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(int lastUpdated)
+    {
+        this.lastUpdated = lastUpdated;
+    }
+
     @Override
     public boolean equals(Object o)
     {

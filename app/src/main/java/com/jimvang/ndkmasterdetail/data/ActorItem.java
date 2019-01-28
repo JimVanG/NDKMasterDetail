@@ -5,12 +5,41 @@ import java.util.Objects;
 /**
  * Created by James Van Gaasbeck on 1/18/19.
  */
-class ActorItem
+public class ActorItem
 {
     public String name;
     public int age;
-    //optional challenge 1: Load image from URL
     public String imageUrl;
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public int getAge()
+    {
+        return age;
+    }
+
+    public void setAge(int age)
+    {
+        this.age = age;
+    }
+
+    public String getImageUrl()
+    {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl)
+    {
+        this.imageUrl = imageUrl;
+    }
 
     @Override
     public boolean equals(Object o)

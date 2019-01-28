@@ -3,14 +3,14 @@ package com.jimvang.ndkmasterdetail;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.jimvang.ndkmasterdetail.data.Content;
+import com.jimvang.ndkmasterdetail.data.MovieItem;
 
 import java.util.List;
 
@@ -30,11 +30,19 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ItemListActivity extends AppCompatActivity
 {
 
-    // Used to load the 'native-lib' library on application startup.
+    private static final String TAG = ItemListActivity.class.getName();
+
+    // Used to load the 'native-lib' library for use in this class.
     static
     {
         System.loadLibrary("native-lib");
     }
+
+    /**
+     * Native methods implemented by the 'native-lib' native library,
+     * which is packaged with this application.
+     */
+    public native MovieItem[] getMovieItemsFromJNI(int numOfMovies);
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -48,20 +56,26 @@ public class ItemListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
 
+        MovieItem[] movieItems = getMovieItemsFromJNI(11);
+//        Log.d(TAG, "onCreate - items from JNI: " + movieItems);
+        for (MovieItem item : movieItems)
+        {
+            Log.d(TAG, "onCreate - items from JNI: " + item);
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Snackbar.make(view, stringFromJNI(), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                Snackbar.make(view, stringFromJNI(), Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         if (findViewById(R.id.item_detail_container) != null)
         {
@@ -164,10 +178,4 @@ public class ItemListActivity extends AppCompatActivity
             }
         }
     }
-
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    public native String stringFromJNI();
 }

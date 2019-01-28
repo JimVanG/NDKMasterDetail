@@ -12,6 +12,9 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <random>
+#include <cfloat> // DBL_MAX
+#include <cmath> // std::nextafter
 
 namespace movies {
     class Actor {
@@ -19,7 +22,6 @@ namespace movies {
         std::string name;
         int age;
 
-        //optional challenge 1: Load image from URL
         std::string imageUrl;
     };
 
@@ -33,28 +35,34 @@ namespace movies {
     class MovieDetail {
     public:
         std::string name;
-        float score;
+        double score;
         std::vector<Actor> actors;
         std::string description;
     };
 
     class MovieController {
     private:
-        std::vector<Movie*> _movies;
-        std::map<std::string, MovieDetail*> _details;
+        std::vector<Movie *> _movies;
+        std::map<std::string, MovieDetail *> _details;
 
     public:
-        MovieController() {
+        MovieController(int numberOfMovies) {
+
+            std::random_device rd;
+            std::mt19937 gen(rd());
+
             //populate data
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < numberOfMovies; i++) {
                 auto movie = new Movie();
                 movie->name = "Top Gun " + std::to_string(i);
                 movie->lastUpdated = i * 10000;
                 _movies.push_back(movie);
 
+                std::uniform_real_distribution<double> dist(-1, std::nextafter(10, DBL_MAX));
+
                 auto movieDetail = new MovieDetail();
                 movieDetail->name = movie->name;
-                movieDetail->score = rand() % 10;
+                movieDetail->score = dist(gen);
                 movieDetail->description = "As students at the United States Navy's elite fighter weapons school compete to be best in the class, one daring young pilot learns a few things from a civilian instructor that are not taught in the classroom.";
 
                 auto tomCruise = Actor();
@@ -90,12 +98,12 @@ namespace movies {
         }
 
         //Returns list of movies
-        std::vector<Movie*> getMovies() {
+        std::vector<Movie *> getMovies() {
             return _movies;
         }
 
         //Returns details about a specific movie
-        MovieDetail* getMovieDetail(std::string name) {
+        MovieDetail *getMovieDetail(std::string name) {
             for (auto item:_details) {
                 if (item.second->name == name) {
                     return item.second;
