@@ -13,8 +13,8 @@
 #include <vector>
 #include <map>
 #include <random>
-#include <cfloat> // DBL_MAX
-#include <cmath> // std::nextafter
+#include <cfloat>
+#include <cmath>
 
 namespace movies {
     class Actor {
@@ -35,7 +35,7 @@ namespace movies {
     class MovieDetail {
     public:
         std::string name;
-        double score;
+        float score;
         std::vector<Actor> actors;
         std::string description;
     };
@@ -46,7 +46,7 @@ namespace movies {
         std::map<std::string, MovieDetail *> _details;
 
     public:
-        MovieController(int numberOfMovies) {
+        explicit MovieController(int numberOfMovies) {
 
             std::random_device rd;
             std::mt19937 gen(rd());
@@ -55,14 +55,14 @@ namespace movies {
             for (int i = 0; i < numberOfMovies; i++) {
                 auto movie = new Movie();
                 movie->name = "Top Gun " + std::to_string(i + 1);
-                movie->lastUpdated = (i + 1) * 10000;
+                movie->lastUpdated = (i + 1);
                 _movies.push_back(movie);
 
                 std::uniform_real_distribution<double> dist(-1, std::nextafter(10, DBL_MAX));
 
                 auto movieDetail = new MovieDetail();
                 movieDetail->name = movie->name;
-                movieDetail->score = dist(gen);
+                movieDetail->score = float (dist(gen));
                 movieDetail->description = "As students at the United States Navy's elite fighter weapons school compete to be best in the class, one daring young pilot learns a few things from a civilian instructor that are not taught in the classroom.";
 
                 auto tomCruise = Actor();

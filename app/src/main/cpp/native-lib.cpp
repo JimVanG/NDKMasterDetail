@@ -12,7 +12,8 @@
   "com/jimvang/ndkmasterdetail/data/MovieItem"  // Class path to Movie model.
 
 #define DATA_CLASS_PATH_MOVIEDETAIL \
-  "com/jimvang/ndkmasterdetail/data/MovieDetailItem"  // Class path to mMvieDetail model.
+  "com/jimvang/ndkmasterdetail/data/MovieDetailItem"  // Class path to MovieDetail model.
+
 
 extern "C" JNIEXPORT jobjectArray JNICALL
 Java_com_jimvang_ndkmasterdetail_ItemListActivity_getMovieItemsFromJNI(JNIEnv *env,
@@ -32,6 +33,7 @@ Java_com_jimvang_ndkmasterdetail_ItemListActivity_getMovieItemsFromJNI(JNIEnv *e
         std::uniform_real_distribution<double> dist(-1, std::nextafter(20, DBL_MAX));
         numberOfMovies = int(dist(gen));
     }
+
     // Create a MovieController object with a list of Movies.
     movies::MovieController movieController = movies::MovieController(numberOfMovies);
 
@@ -64,3 +66,54 @@ Java_com_jimvang_ndkmasterdetail_ItemListActivity_getMovieItemsFromJNI(JNIEnv *e
     }
     return objectArray;
 }
+
+extern "C" JNIEXPORT jobject JNICALL
+Java_com_jimvang_ndkmasterdetail_ItemDetailFragment_getMovieDetailFromJNI(JNIEnv *env,
+                                                                          jobject /* this */,
+                                                                          jstring movieName,
+                                                                          jint numberOfMovies /*Use negative/0 number for random */) {
+
+    /*
+     * This MUST be called before the JNIEnv variable is used, so call it early on in the function.
+     * Most likely has to do with the JNIEnv pointer being modified making it so the FindClass()
+     * method doesn't work correctly.
+     */
+    jclass movieClass = env->FindClass(DATA_CLASS_PATH_MOVIEDETAIL);
+
+    if (numberOfMovies < 1 || numberOfMovies > 20) {
+        // If an "invalid number" is passed in generate a random number from 1 to 20.
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<double> dist(-1, std::nextafter(20, DBL_MAX));
+        numberOfMovies = int(dist(gen));
+    }
+
+    // Create a MovieController object with a list of Movies.
+    movies::MovieController movieController = movies::MovieController(numberOfMovies);
+
+    // Get the native Movie list that's been created.
+    std::vector<movies::Movie *> movieNativeVector = movieController.getMovies();
+
+
+    movies::MovieDetail *nativeMovieDetail = movieController.
+            getMovieDetail(env->GetStringUTFChars(movieName, nullptr));
+
+
+    // Get the data we need from the native movie object that we will assign to the new jObject.
+    const char *c = nativeMovieDetail->name.c_str();
+    jstring stringArg1 = env->NewStringUTF(c);
+    jfloat floatArg = nativeMovieDetail->score;
+    const char *c2 = nativeMovieDetail->description.c_str();
+    jstring stringArg2 = env->NewStringUTF(c2);
+    // Get the constructor method with the two fields as parameters (string, int). They must
+    // be defined like this, no space nor comma between the two parameters, followed by a V
+    // to indicate the method has a void return value. "<init>" is used for constructors.
+    jmethodID midConstructor = env->GetMethodID(movieClass, "<init>",
+                                                "(Ljava/lang/String;FLjava/lang/String;)V");
+    // Create our java object using the constructor method we retrieved and the arguments.
+    jobject movieDetailObject = env->NewObject(movieClass, midConstructor, stringArg1, floatArg,
+                                               stringArg2);
+
+    return movieDetailObject;
+}
+

@@ -9,10 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.jimvang.ndkmasterdetail.data.Content;
 import com.jimvang.ndkmasterdetail.data.MovieItem;
-
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,8 +26,11 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class ItemListActivity extends AppCompatActivity
 {
-
     private static final String TAG = ItemListActivity.class.getName();
+
+    public static final int NUMBER_OF_ITEMS = 18;
+
+    MovieItem[] movieItemArray;
 
     // Used to load the 'native-lib' library for use in this class.
     static
@@ -56,26 +56,33 @@ public class ItemListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
 
-        MovieItem[] movieItems = getMovieItemsFromJNI(11);
-
-        for (MovieItem item : movieItems)
+        if (movieItemArray == null || movieItemArray.length < 1)
         {
-            Log.d(TAG, "onCreate - items from JNI: " + item);
+            movieItemArray = getMovieItemsFromJNI(NUMBER_OF_ITEMS);
         }
+
+        if (movieItemArray != null)
+        {
+            for (MovieItem item : movieItemArray)
+            {
+                Log.d(TAG, "onCreate - items from JNI: " + item);
+            }
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View view)
-//            {
-//                Snackbar.make(view, stringFromJNI(), Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        //        fab.setOnClickListener(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View view)
+        //            {
+        //                Snackbar.make(view, stringFromJNI(), Snackbar.LENGTH_LONG)
+        //                        .setAction("Action", null).show();
+        //            }
+        //        });
 
         if (findViewById(R.id.item_detail_container) != null)
         {
@@ -94,7 +101,7 @@ public class ItemListActivity extends AppCompatActivity
     private void setupRecyclerView(@NonNull RecyclerView recyclerView)
     {
         recyclerView
-                .setAdapter(new SimpleItemRecyclerViewAdapter(this, Content.ITEMS, mTwoPane));
+                .setAdapter(new SimpleItemRecyclerViewAdapter(this, movieItemArray, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
@@ -102,18 +109,19 @@ public class ItemListActivity extends AppCompatActivity
     {
 
         private final ItemListActivity mParentActivity;
-        private final List<Content.DummyItem> mValues;
+        private final MovieItem[] mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                Content.DummyItem item = (Content.DummyItem) view.getTag();
+                MovieItem item = (MovieItem) view.getTag();
                 if (mTwoPane)
                 {
                     Bundle arguments = new Bundle();
-                    arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
+                    arguments.putString(ItemDetailFragment.ARG_ITEM_NAME, item.name);
+                    arguments.putInt(ItemDetailFragment.ARG_ITEM_COUNT, NUMBER_OF_ITEMS);
                     ItemDetailFragment fragment = new ItemDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -124,8 +132,8 @@ public class ItemListActivity extends AppCompatActivity
                 {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ItemDetailActivity.class);
-                    intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id);
-
+                    intent.putExtra(ItemDetailFragment.ARG_ITEM_NAME, item.name);
+                    intent.putExtra(ItemDetailFragment.ARG_ITEM_COUNT, NUMBER_OF_ITEMS);
                     context.startActivity(intent);
                 }
             }
@@ -133,7 +141,7 @@ public class ItemListActivity extends AppCompatActivity
 
         SimpleItemRecyclerViewAdapter(
                 ItemListActivity parent,
-                List<Content.DummyItem> items,
+                MovieItem[] items,
                 boolean twoPane)
         {
             mValues = items;
@@ -141,8 +149,9 @@ public class ItemListActivity extends AppCompatActivity
             mTwoPane = twoPane;
         }
 
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
         {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_list_content, parent, false);
@@ -150,19 +159,19 @@ public class ItemListActivity extends AppCompatActivity
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position)
+        public void onBindViewHolder(@NonNull final ViewHolder holder, int position)
         {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mIdView.setText(String.valueOf(mValues[position].lastUpdated));
+            holder.mContentView.setText(mValues[position].name);
 
-            holder.itemView.setTag(mValues.get(position));
+            holder.itemView.setTag(mValues[position]);
             holder.itemView.setOnClickListener(mOnClickListener);
         }
 
         @Override
         public int getItemCount()
         {
-            return mValues.size();
+            return mValues.length;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder
