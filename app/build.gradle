@@ -74,21 +74,21 @@ android {
     }
 
     packagingOptions {
-        exclude '**/LICENSE.txt'
-        exclude '**/NOTICE.txt'
-        exclude '**/notice.txt'
-        exclude '**/license.txt'
-        exclude '**/NOTICE'
-        exclude '**/LICENSE'
-        exclude '**/notice'
-        exclude '**/license'
-        exclude '**/LGPL2.1'
-        exclude '**/README'
-        exclude '**/README.*'
-        exclude '**/DEPENDENCIES'
-        exclude '**/DEPENDENCIES.**'
-        exclude '**/dependencies'
-        exclude '**/dependencies.**'
+        pickFirst '**/LICENSE.txt'
+        pickFirst '**/NOTICE.txt'
+        pickFirst '**/notice.txt'
+        pickFirst '**/license.txt'
+        pickFirst '**/NOTICE'
+        pickFirst '**/LICENSE'
+        pickFirst '**/notice'
+        pickFirst '**/license'
+        pickFirst '**/LGPL2.1'
+        pickFirst '**/README'
+        pickFirst '**/README.*'
+        pickFirst '**/DEPENDENCIES'
+        pickFirst '**/DEPENDENCIES.**'
+        pickFirst '**/dependencies'
+        pickFirst '**/dependencies.**'
     }
 
     lintOptions {

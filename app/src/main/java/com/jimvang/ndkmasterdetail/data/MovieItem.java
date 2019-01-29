@@ -2,6 +2,8 @@ package com.jimvang.ndkmasterdetail.data;
 
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
+
 /**
  * Created by James Van Gaasbeck on 1/18/19.
  */
@@ -56,5 +58,15 @@ public class MovieItem
     public int hashCode()
     {
         return Objects.hash(name, lastUpdated);
+    }
+
+    @NonNull
+    @Override
+    public String toString()
+    {
+        return "MovieItem{" +
+                "name='" + name + '\'' +
+                ", lastUpdated=" + lastUpdated +
+                '}';
     }
 }

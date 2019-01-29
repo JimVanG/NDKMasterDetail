@@ -54,8 +54,8 @@ namespace movies {
             //populate data
             for (int i = 0; i < numberOfMovies; i++) {
                 auto movie = new Movie();
-                movie->name = "Top Gun " + std::to_string(i);
-                movie->lastUpdated = i * 10000;
+                movie->name = "Top Gun " + std::to_string(i + 1);
+                movie->lastUpdated = (i + 1) * 10000;
                 _movies.push_back(movie);
 
                 std::uniform_real_distribution<double> dist(-1, std::nextafter(10, DBL_MAX));

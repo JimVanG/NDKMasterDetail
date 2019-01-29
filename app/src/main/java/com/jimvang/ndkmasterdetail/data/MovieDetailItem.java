@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
+
 /**
  * Created by James Van Gaasbeck on 1/18/19.
  */
@@ -11,8 +13,25 @@ public class MovieDetailItem
 {
     public String name;
     public float score;
-    public List<ActorItem> actorItemList = new ArrayList<>();
+    public List<ActorItem> actorItemList;
     public String description;
+
+    public MovieDetailItem(String name, float score, String description)
+    {
+        this(name, score, new ArrayList<ActorItem>(0), description);
+    }
+
+    public MovieDetailItem(
+            String name,
+            float score,
+            List<ActorItem> actorItemList,
+            String description)
+    {
+        this.name = name;
+        this.score = score;
+        this.actorItemList = actorItemList;
+        this.description = description;
+    }
 
     public String getName()
     {
@@ -76,5 +95,17 @@ public class MovieDetailItem
     public int hashCode()
     {
         return Objects.hash(name, score, actorItemList, description);
+    }
+
+    @NonNull
+    @Override
+    public String toString()
+    {
+        return "MovieDetailItem{" +
+                "name='" + name + '\'' +
+                ", score=" + score +
+                ", actorItemList=" + actorItemList +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

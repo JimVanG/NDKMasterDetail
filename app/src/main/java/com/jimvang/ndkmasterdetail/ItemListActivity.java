@@ -57,7 +57,7 @@ public class ItemListActivity extends AppCompatActivity
         setContentView(R.layout.activity_item_list);
 
         MovieItem[] movieItems = getMovieItemsFromJNI(11);
-//        Log.d(TAG, "onCreate - items from JNI: " + movieItems);
+
         for (MovieItem item : movieItems)
         {
             Log.d(TAG, "onCreate - items from JNI: " + item);

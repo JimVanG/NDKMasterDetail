@@ -2,6 +2,8 @@ package com.jimvang.ndkmasterdetail.data;
 
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
+
 /**
  * Created by James Van Gaasbeck on 1/18/19.
  */
@@ -10,6 +12,18 @@ public class ActorItem
     public String name;
     public int age;
     public String imageUrl;
+
+    public ActorItem(String name, int age)
+    {
+        this(name, age, null);
+    }
+
+    public ActorItem(String name, int age, String imageUrl)
+    {
+        this.name = name;
+        this.age = age;
+        this.imageUrl = imageUrl;
+    }
 
     public String getName()
     {
@@ -62,5 +76,16 @@ public class ActorItem
     public int hashCode()
     {
         return Objects.hash(name, age, imageUrl);
+    }
+
+    @NonNull
+    @Override
+    public String toString()
+    {
+        return "ActorItem{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }
